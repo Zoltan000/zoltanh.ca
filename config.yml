@@ -30,3 +30,9 @@ params:
 #          url: "https://github.com/charlola"
 #        - name: linkedin
 #          url: "https://www.linkedin.com/in/heycharlola/"
+
+menu:
+    main:
+        - name: Nothing
+          url: nothing/
+          weight: 30
