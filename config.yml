@@ -20,3 +20,13 @@ params:
         title: Zoltan Hegyi
         description: |
           Hello, I am Zoltan, a mechanical engineering student at Concordia.
+
+    mainSections: []
+
+    socialIcons: []
+#        - name: buymeacoffee
+#          url: "https://ko-fi.com/heycharlola"
+#        - name: github
+#          url: "https://github.com/charlola"
+#        - name: linkedin
+#          url: "https://www.linkedin.com/in/heycharlola/"
