@@ -1,0 +1,22 @@
+theme: charlolamode
+title: Zoltan Hegyi
+
+params:
+    author: Zoltan Hegyi
+
+
+    defaultTheme: auto
+    # disableThemeToggle: true
+    ShowShareButtons: true
+    ShowReadingTime: true
+    displayFullLangName: true
+    ShowBreadCrumbs: true
+    ShowCodeCopyButtons: true
+    ShowToc: true
+
+    profileMode:
+        # Disable to populate home page with 'mainSections' content
+        enabled: true
+        title: Zoltan Hegyi
+        description: |
+          Hello, I am Zoltan, a mechanical engineering student at Concordia.
