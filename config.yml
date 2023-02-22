@@ -31,8 +31,8 @@ params:
 #        - name: linkedin
 #          url: "https://www.linkedin.com/in/heycharlola/"
 
-#menu:
-#    main:
+menu:
+    main:
 #        - name: Nothing
 #          url: nothing/
 #          weight: 30
