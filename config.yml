@@ -32,7 +32,7 @@ params:
 #          url: "https://www.linkedin.com/in/heycharlola/"
 
     assets:
-          favicon: "/static/images/favicon.ico"
+          favicon: "/images/favicon.ico"
 
 menu:
     main:
