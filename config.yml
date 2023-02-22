@@ -32,9 +32,9 @@ params:
 #          url: "https://www.linkedin.com/in/heycharlola/"
 
     assets:
-          favicon: "/images/favicon.ico"
-          favicon16x16: "/images/favicon-16x16.png"
-          favicon32x32: "/images/favicon-32x32.png"
+          favicon: "/static/images/favicon.ico"
+          favicon16x16: "/static/images/favicon-16x16.png"
+          favicon32x32: "/static/images/favicon-32x32.png"
 menu:
     main:
         - name: Nothing
