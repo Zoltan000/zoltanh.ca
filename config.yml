@@ -33,6 +33,6 @@ params:
 
 menu:
     main:
-#        - name: Nothing
-#          url: nothing/
-#          weight: 30
+        - name: Nothing
+          url: nothing/
+          weight: 30
