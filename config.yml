@@ -33,7 +33,8 @@ params:
 
     assets:
           favicon: "/images/favicon.ico"
-
+          favicon16x16: "/images/favicon-16x16.png"
+          favicon32x32: "/images/favicon-32x32.png"
 menu:
     main:
         - name: Nothing
