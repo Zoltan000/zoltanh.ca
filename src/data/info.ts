@@ -4,7 +4,7 @@ export const info = {
     "I'm a Mechanical Engineering Student and Manufacturing Processes TA",
   role: "Mechanical Engineering Student",
   picture: "/pic.png",
-  picture_alt: "Bart Simpson",
+  picture_alt: "Zoltan Hegyi",
   location: "Montreal, QC",
   cv: "/resume.pdf",
 
@@ -91,9 +91,9 @@ export const info = {
   ],
 
   contact: {
-    email: "bart@thesimpsons.com",
-    linkedin: "https://www.linkedin.com/in/bartsimpsonfake",
-    github: "https://www.github.com/gio-del",
-    twitter: "https://www.twitter.com/bartsimpsonfake",
+    email: "zoltan@zoltanh.ca",
+    linkedin: "https://www.linkedin.com/in/zoltan-h/",
+    github: "https://github.com/Zoltan000",
+    //twitter: "https://www.twitter.com/bartsimpsonfake",
   },
 };
