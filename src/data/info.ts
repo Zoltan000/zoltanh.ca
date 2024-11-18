@@ -1,0 +1,99 @@
+export const info = {
+  name: "Zoltan Hegyi",
+  brief_description:
+    "I'm a Mechanical Engineering Student and Manufacturing Processes TA",
+  role: "Mechanical Engineering Student",
+  picture: "/pic.png",
+  picture_alt: "Bart Simpson",
+  location: "Montreal, QC",
+  cv: "/resume.pdf",
+
+  about: {
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+    Ut enim ad minim veniam, 
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+    Excepteur sint occaecat cupidatat non proident, 
+    sunt in culpa qui officia deserunt mollit anim id est laborum.`,
+    education: [
+      {
+        title: "Concordia University",
+        location: "Bachelors in Mechanical Engineering",
+        date: "2020 - Present",
+        //gpa: "3.7",
+        //thesis: "The Art of Subverting Expectations: A Practical Guide",
+      },
+      {
+        title: "Marianopolis College",
+        location: "Pure and Applied Science",
+        date: "2018 - 2020",
+      }
+    ],
+    experience: [
+      {
+        title: "Manufacturing Processes TA",
+        date: "May 2024 - Present",
+        location: "Concordia University",
+        description:
+          "As a laboratory teaching assistant, I facilitated students' practical learning by providing hands-on instruction in manufacturing components using mills, lathes, sheet metal tools, and various hand tools. Leveraging my extensive expertise in machining, along with strong competencies in design, safety, and metrology, I effectively guided students in developing technical proficiency and adhering to best practices in their projects. This position refined my ability to communicate complex concepts clearly and to maintain a safe and efficient educational environment.",
+      },
+      {
+        title: "Chemical Analyst",
+        date: "May 2021 - Dec 2021",
+        location: "Bureau Veritas",
+        //description:
+        //  "Masterminded backend solutions using Node.js and MongoDB. Surprisingly good at debugging, considering my history of causing bugs.",
+      },
+      /*{
+        title: "Junior Hacker",
+        date: "2010 - 2013",
+        location: "Springfield Elementary Cyber Club",
+        description:
+          "Pioneered early web exploits, leading the club in daring coding escapades. Was disciplined for hacking the school's grading system.",
+      },*/
+    ],
+
+    skills: ["JavaScript", "React", "Node.js", "MongoDB", "Prank Mastery"], // not used yet
+  },
+
+  projects: [
+    {
+      title: "Bart's Prank Portfolio",
+      date: "2024",
+      description:
+        "An interactive portfolio website showcasing my mischievous coding projects.",
+      link: "https://github.com/bartsimpsonfake/prank-portfolio",
+      tech: ["React", "Node.js", "MongoDB", "Sarcasm.js"],
+      img_alt: "Bart's Portfolio",
+      img_path: "/simpsons.png",
+    },
+    {
+      title: "Skateboard Shop",
+      date: "2023",
+      description:
+        "An e-commerce site selling skateboards and prank supplies. No bullies allowed!",
+      link: "https://github.com/bartsimpsonfake/skate-shop",
+      tech: ["React", "Node.js", "MongoDB", "Skateboard.js"],
+      img_alt: "Skateboard Shop",
+      img_path: "skateboard.png",
+    },
+    {
+      title: "Comic Book Club",
+      date: "2022",
+      description:
+        "A platform for comic book enthusiasts to discuss and share their collections.",
+      link: "https://github.com/bartsimpsonfake/comic-club",
+      tech: ["React", "Node.js", "MongoDB", "Comic.js"],
+      img_alt: "Comic Book Club",
+      img_path: "comics.png",
+    },
+  ],
+
+  contact: {
+    email: "bart@thesimpsons.com",
+    linkedin: "https://www.linkedin.com/in/bartsimpsonfake",
+    github: "https://www.github.com/gio-del",
+    twitter: "https://www.twitter.com/bartsimpsonfake",
+  },
+};
