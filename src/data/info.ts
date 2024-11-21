@@ -63,7 +63,7 @@ export const info = {
       date: "2024",
       description:
         "School Project about making a 3 character display show a 30 character sentence.",
-      link: "http://localhost:4321/posts/post1",
+      link: "/posts/electronics_project",
       tech: ["Electronics", "Analog", "Prototype", "Logic"],
       img_alt: "MIAE 368 Project",
       img_path: "/SchoolProject.jpg",

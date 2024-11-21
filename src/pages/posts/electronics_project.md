@@ -3,7 +3,7 @@ title: "Prototype Sequential 3 Character Display"
 date: "2024-11-21"
 
 layout: ../../layouts/PostLayout.astro
-description: "This is my first Astro post. Stay tuned for more exciting content coming soon!"
+description: "Summary of my big final project for an electronics class I took"
 
 img_path : "/SchoolProject.jpg"
 img_alt: "MIAE 368 School Projecet"
