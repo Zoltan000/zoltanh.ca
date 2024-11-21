@@ -1,35 +1,48 @@
 ---
-title: "My First Astro Post"
-date: "2022-01-01"
+title: "Prototype Sequential 3 Character Display"
+date: "2024-11-21"
 
 layout: ../../layouts/PostLayout.astro
 description: "This is my first Astro post. Stay tuned for more exciting content coming soon!"
 
-img_path : "/paper.png"
-img_alt: "Insert image description here"
+img_path : "/SchoolProject.jpg"
+img_alt: "MIAE 368 School Projecet"
 ---
 
-This is my first Astro post. Stay tuned for more exciting content coming soon!
-Voluptate dolor aliquip ipsum aliquip velit cillum mollit aliqua veniam cillum sint enim ad amet. Lorem cillum consectetur esse sint. Cillum excepteur do enim nulla qui esse sint ipsum amet adipisicing do.
+I love electronics, so when I had to pick a project from the list for this electronics class, I knew I wanted to tackle one of the hardest ones. For our final project, we chose to pick the one that required us to make a set of modular circuits that would allow the user to type a 30 character message and play it back on three 17 segment displays. The callenge was that we were not allowed to use any microcontrollers, meaning no arduino code, just digital logic ICs.
 
-## Section 1
+## Design
 
-Commodo adipisicing et tempor laboris commodo enim consequat. Exercitation velit nulla excepteur eu qui minim in. Laborum occaecat occaecat irure occaecat labore et deserunt adipisicing exercitation.
+I single handedly designed all the circuits for our project on a circuit simulation website called <a href="https://www.falstad.com/circuit/circuitjs.html" target="_blank">Falstad</a>. This allowed me to be able to run through serveral iterations and to see immediate flaws in the design (there were many).
 
-Duis est sint Lorem anim. Excepteur sunt magna sint exercitation aliqua adipisicing dolor dolore anim tempor Lorem enim dolore. Aliqua aliqua occaecat laborum culpa enim. Aliqua et ad consequat elit officia Lorem sunt voluptate adipisicing laborum velit adipisicing sunt. Sit cupidatat consequat velit eiusmod ut excepteur elit cillum irure pariatur sunt eu sunt dolor. Nisi eu est reprehenderit cillum magna eiusmod elit aliqua amet reprehenderit irure.
+Without giving away too much (to avoid plagiarism by future student), the project consists of seven modules, each resposible for a specific task:
 
-## Section 2
+1. The Keyboard which is a series of push buttons each with a unique 5 bit binary connection to the Address bus
 
-Reprehenderit tempor laborum enim adipisicing amet tempor et. Consectetur reprehenderit sit quis ea ad occaecat aliquip ipsum aliqua aliquip proident ullamco culpa. Eu eu enim proident deserunt irure do in commodo nostrud elit quis quis occaecat sit. Occaecat cupidatat cillum ex in nisi laborum ullamco cillum officia amet et. Aliquip enim exercitation sint ut in deserunt ut et laborum ex reprehenderit cillum do. Veniam veniam amet aute incididunt mollit ex cupidatat nulla.
+2. The three 17 segment displays with a series of D-latches to store the letter of the adjacent display before it in turn changes and stores the letter of the first display which is connected to module 7
 
-Esse esse Lorem culpa minim consectetur dolor exercitation sunt in. Cillum proident labore irure dolor dolore. Mollit cillum esse quis labore aliqua reprehenderit anim ad sint ullamco tempor. Commodo veniam est mollit excepteur anim pariatur elit ullamco aliquip ut enim id magna. Lorem cillum ad Lorem ea.
+3. The Counter, consisting of two binary counters, serves two purposes: A. to keep track of the position in memory when writting to the Encoder EEPROM as well as to B. cycle through all the letters when playing back the message.
 
-Aute ullamco aute ea cillum nisi duis laborum consequat nisi deserunt dolore ex officia. Nulla deserunt laboris laborum cillum occaecat occaecat ut incididunt ex laboris consequat eu. Exercitation consequat ullamco excepteur excepteur in pariatur cupidatat pariatur aute aute tempor aliquip.
+4. The Adder is used to take the count from the first counter corresponding to the number of letters typed and adding 2 so that when the message is read back there are two spaces before it loops back to the first character. This is done using a magnitude comparator IC such that when reading back the message, the second counter will keep counting up indefinitely until it counts to the value of the first counter *plus two* and then get reset by the comparator.
 
-Eiusmod consequat occaecat aute sint velit veniam Lorem officia consequat proident est consectetur aliqua. Tempor pariatur ipsum voluptate ex incididunt ea ad minim quis id sit Lorem culpa adipisicing. Commodo nisi non sunt ipsum eiusmod voluptate est aliquip in deserunt.
+5. The Encoder is a single EEPROM which saves the 5 bit binary word associated to each letter of the alphabet.
 
-Nisi cupidatat exercitation irure nulla irure ut Lorem irure Lorem. Ex et sunt esse sint. Magna elit Lorem consequat sint occaecat ad do tempor. Nostrud velit exercitation mollit ut aute labore pariatur ipsum. Nostrud ad adipisicing velit elit aute enim adipisicing consequat dolore voluptate nostrud. Tempor nulla Lorem eu aliquip. Dolor labore est fugiat aute sint sint incididunt sunt non adipisicing tempor.
+6. The Pulse Sequencer is the beating heart of the whole project. It is the clock that is responsible for advancing everything. It consists of three 555 timer chips. The first is configured as an Astable 555 circuit acting as the clock; it is connected to the second set of D-Latches and triggers the third display to copy the second. The second and third chips are configured as monostable circuits, creating a pulse on the falling edge of the previous pulse. the first monostable 555 gets triggered by the astable 555 and is connected to the first set of D-Latches which triggers the second display to copy the first. The second monostable 555 (the third 555) is connected to the clock in module 3 to advance the count and display the next letter.
 
-Elit incididunt anim non magna pariatur dolor id officia irure nostrud aute reprehenderit veniam. Incididunt fugiat sit laboris deserunt et ea id cupidatat ex irure deserunt magna exercitation labore. Enim ad quis consequat ullamco velit dolore dolor labore elit amet sint minim nostrud. Occaecat Lorem sunt reprehenderit cillum. Et Lorem non excepteur tempor laborum laborum. Qui cupidatat adipisicing magna ullamco sit minim fugiat aliqua consectetur fugiat eiusmod.
+7. The Decoder, two EEPROMs preprogrammed by a member of the team where every binary address corresponds to a series of LEDs that need to be lit to form a letter. In other words, every address corresponds to a letter. This address comes from the Encoder.
 
-Cillum enim amet amet dolor sint minim eiusmod consectetur amet labore ut. Velit aliqua minim aute incididunt do. Laboris veniam adipisicing adipisicing ut aliqua do. Qui laborum quis cillum est tempor mollit elit reprehenderit.
+If any of that sounded confusing it is because it is. Comming up with this final design took a lot of work and a bit of trial and error. After several iterations, this is what I could come up with given the time.
+
+## Construction
+
+The construction had to be the most tedious part of the project, which is why I am very fortunate to have had a group of very hard working teammates that really came through to get this project functioning by the deadline.
+
+The mess of wires around the displays took four tries before it was wired correctly, requiring a full spool of insulated wire (initially we tried with just jumper wires but they were too unreliable).
+
+The Adder was constructed manually by a fellow teammate out of AND/OR gates as we couldn't find a 5 bit adder in time.
+
+The Keyboard was painstakingly assembled one push button at a time by another fellow teammate requiring roughly 80 diodes.
+
+In the end, we managed to assemble and test everything in the nick of time and finished just mere moments before the 2024 North American Solar Eclipse, after which we drove straight to school to present.
+
+Further documentation for the project including schematics and detailed pictures of every module will be released in the future at the professors discretion.
