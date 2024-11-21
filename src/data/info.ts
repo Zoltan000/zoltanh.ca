@@ -6,7 +6,7 @@ export const info = {
   picture: "/pic.png",
   picture_alt: "Zoltan Hegyi",
   location: "Montreal, QC",
-  cv: "/resume.pdf",
+  cv: "/CV_ZoltanHegyi TA.pdf",
 
   about: {
     description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
@@ -59,14 +59,14 @@ export const info = {
 
   projects: [
     {
-      title: "Bart's Prank Portfolio",
+      title: "Analog 17 Segment Display",
       date: "2024",
       description:
-        "An interactive portfolio website showcasing my mischievous coding projects.",
-      link: "https://github.com/bartsimpsonfake/prank-portfolio",
-      tech: ["React", "Node.js", "MongoDB", "Sarcasm.js"],
-      img_alt: "Bart's Portfolio",
-      img_path: "/simpsons.png",
+        "School Project about making a 3 character display show a 30 character sentence.",
+      link: "http://localhost:4321/posts/post1",
+      tech: ["Electronics", "Analog", "Prototype", "Logic"],
+      img_alt: "MIAE 368 Project",
+      img_path: "/SchoolProject.jpg",
     },
     {
       title: "Skateboard Shop",
