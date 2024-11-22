@@ -1,5 +1,5 @@
 ---
-title: "Prototype Sequential 3 Character Display"
+title: "Electronics Project"
 date: "2024-11-21"
 
 layout: ../../layouts/PostLayout.astro
