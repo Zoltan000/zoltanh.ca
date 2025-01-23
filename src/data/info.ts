@@ -1,7 +1,7 @@
 export const info = {
   name: "Zoltan Hegyi",
   brief_description:
-    "I'm a Mechanical Engineering Student and Manufacturing Processes TA",
+    "I am a Mechanical Engineering Student and Teaching Assistant",
   role: "Mechanical Engineering Student",
   picture: "/pic.png",
   picture_alt: "Zoltan Hegyi",
@@ -9,13 +9,9 @@ export const info = {
   cv: "/CV_ZoltanHegyi TA.pdf",
 
   about: {
-    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-    Ut enim ad minim veniam, 
-    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-    Excepteur sint occaecat cupidatat non proident, 
-    sunt in culpa qui officia deserunt mollit anim id est laborum.`,
+    description: `From a young age, I have always been extremely curious about how the world works.
+    Whether I was staring at cranes or observing workers service a vending machine I always wondered how everyday objects funcitoned.
+    This unquenchable thirst for engineering has allowed me to thrive both academically and professionally.`,
     education: [
       {
         title: "Concordia University",
@@ -32,6 +28,12 @@ export const info = {
     ],
     experience: [
       {
+        title: "Electronics TA",
+        date: "Jan 2025 - Present",
+        location: "Concordia University",
+        description: "I tought students, both in the classroom and in the lab, various basic to advanced electronics concepts.",
+      },
+      {
         title: "Manufacturing Processes TA",
         date: "May 2024 - Present",
         location: "Concordia University",
@@ -45,13 +47,6 @@ export const info = {
         //description:
         //  "Masterminded backend solutions using Node.js and MongoDB. Surprisingly good at debugging, considering my history of causing bugs.",
       },
-      /*{
-        title: "Junior Hacker",
-        date: "2010 - 2013",
-        location: "Springfield Elementary Cyber Club",
-        description:
-          "Pioneered early web exploits, leading the club in daring coding escapades. Was disciplined for hacking the school's grading system.",
-      },*/
     ],
 
     skills: ["JavaScript", "React", "Node.js", "MongoDB", "Prank Mastery"], // not used yet
@@ -69,7 +64,7 @@ export const info = {
       img_path: "/SchoolProject.jpg",
     },
     {
-      title: "Skateboard Shop",
+      title: "TEMPLATE",
       date: "2023",
       description:
         "An e-commerce site selling skateboards and prank supplies. No bullies allowed!",
@@ -79,7 +74,7 @@ export const info = {
       img_path: "skateboard.png",
     },
     {
-      title: "Comic Book Club",
+      title: "TEMPLATE",
       date: "2022",
       description:
         "A platform for comic book enthusiasts to discuss and share their collections.",
