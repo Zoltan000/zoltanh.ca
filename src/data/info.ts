@@ -63,7 +63,7 @@ export const info = {
       img_alt: "MIAE 368 Project",
       img_path: "/SchoolProject.jpg",
     },
-    {
+   /* {
       title: "TEMPLATE",
       date: "2023",
       description:
@@ -82,7 +82,7 @@ export const info = {
       tech: ["React", "Node.js", "MongoDB", "Comic.js"],
       img_alt: "Comic Book Club",
       img_path: "comics.png",
-    },
+    },*/
   ],
 
   contact: {
