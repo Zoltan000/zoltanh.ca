@@ -18,7 +18,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/react": "^18.2.52",
     "@types/react-dom": "^18.2.18",
-    "astro": "^4.4.14",
+    "astro": "^4.16.18",
     "astro-robots-txt": "^1.0.0",
     "fuse.js": "^7.0.0",
     "react": "^18.2.0",

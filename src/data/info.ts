@@ -6,7 +6,7 @@ export const info = {
   picture: "/pic.png",
   picture_alt: "Zoltan Hegyi",
   location: "Montreal, QC",
-  cv: "/CV_ZoltanHegyi TA.pdf",
+  cv: "/CV_ZoltanHegyi.pdf",
 
   about: {
     description: `From a young age, I have always been extremely curious about how the world works.
@@ -31,21 +31,19 @@ export const info = {
         title: "Electronics TA",
         date: "Jan 2025 - Present",
         location: "Concordia University",
-        description: "I tought students, both in the classroom and in the lab, various basic to advanced electronics concepts.",
+        description: "Assisted in delivering tutorials and supervising laboratory sessions for an undergraduate course covering fundamental electronics concepts, including circuit analysis, semiconductor devices, operational amplifiers, and digital logic systems. Guided students in applying theoretical knowledge to practical lab experiments, troubleshooting circuit designs, and developing a deeper understanding of electronic components and digital systems. Provided academic support through problem-solving sessions and hands-on demonstrations.",
       },
       {
         title: "Manufacturing Processes TA",
         date: "May 2024 - Present",
         location: "Concordia University",
-        description:
-          "As a laboratory teaching assistant, I facilitated students' practical learning by providing hands-on instruction in manufacturing components using mills, lathes, sheet metal tools, and various hand tools. Leveraging my extensive expertise in machining, along with strong competencies in design, safety, and metrology, I effectively guided students in developing technical proficiency and adhering to best practices in their projects. This position refined my ability to communicate complex concepts clearly and to maintain a safe and efficient educational environment.",
+        description: "As a laboratory teaching assistant, I facilitated students' practical learning by providing hands-on instruction in manufacturing components using mills, lathes, sheet metal tools, and various hand tools. Leveraging my extensive expertise in machining, along with strong competencies in design, safety, and metrology, I effectively guided students in developing technical proficiency and adhering to best practices in their projects. This position refined my ability to communicate complex concepts clearly and to maintain a safe and efficient educational environment.",
       },
       {
         title: "Chemical Analyst",
         date: "May 2021 - Dec 2021",
         location: "Bureau Veritas",
-        //description:
-        //  "Masterminded backend solutions using Node.js and MongoDB. Surprisingly good at debugging, considering my history of causing bugs.",
+        description: "Begun as a Lab Technician and promoted to Chemical Analyst after demonstrating superior curiosity and passion to learn. As an Analyst, I was responsible for performing analyses on samples and complex samples preparation, following Standard Operating Procedures (SOPs) to ensure accuracy and quality of work, ensuring deadlines are met, and following all laboratory safety rules and regulations.",
       },
     ],
 
