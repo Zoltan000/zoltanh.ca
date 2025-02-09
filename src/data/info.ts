@@ -10,7 +10,7 @@ export const info = {
 
   about: {
     description: `From a young age, I have always been extremely curious about how the world works.
-    Whether I was staring at cranes or observing workers service a vending machine I always wondered how everyday objects funcitoned.
+    Whether I was staring at cranes or observing workers service a vending machine I always wondered how everyday objects functioned.
     This unquenchable thirst for engineering has allowed me to thrive both academically and professionally.`,
     education: [
       {
