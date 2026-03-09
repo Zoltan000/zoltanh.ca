@@ -6,7 +6,7 @@ export const info = {
   picture: "/pic.png",
   picture_alt: "Zoltan Hegyi",
   location: "Montreal, QC",
-  cv: "/CV_ZoltanHegyi.pdf",
+  cv: "/Zoltan_Hegyi_CV.pdf",
 
   about: {
     description: `From a young age, I have always been extremely curious about how the world works.
