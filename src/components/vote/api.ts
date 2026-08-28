@@ -176,6 +176,7 @@ function mockState(voterId: string | null): VoteState {
     ballot: voterId ? mock.ballots[voterId] ?? null : null,
     votedCount: Object.keys(mock.ballots).length,
     totalVoters: ROSTER.length,
+    votedIds: Object.keys(mock.ballots),
   };
   if (mock.phase === "results") state.results = computeResults(DRINKS, mock.ballots);
   return state;

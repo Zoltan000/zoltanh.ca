@@ -8,6 +8,7 @@ import {
   type Ballot,
   type CategoryId,
   type DrinkResult,
+  type RosterEntry,
   type VoteState,
 } from "./types";
 import { getState, submitVote, MOCK } from "./api";
@@ -283,6 +284,106 @@ function Ballot({
   );
 }
 
+/* ── ballots-received roll ────────────────────────────────────────────────
+   Who has voted, not what they voted. Set as a printed subscription list:
+   names in ink once their ballot lands, ghosted until then. The colour
+   transition is slow on purpose — a name should settle in, not pop. */
+
+function BallotRoll({
+  roster,
+  votedIds,
+}: {
+  roster: RosterEntry[];
+  votedIds: string[];
+}) {
+  const voted = useMemo(() => new Set(votedIds), [votedIds]);
+  const people = useMemo(
+    () => [...roster].sort((a, b) => a.name.localeCompare(b.name)),
+    [roster]
+  );
+
+  return (
+    // Uncontrolled <details>: the browser owns the open state, so the 4s poll
+    // re-rendering the list never snaps it shut under the reader.
+    <details className="disclosure" style={{ marginTop: "var(--space-4)" }}>
+      <summary>
+        <h6 style={{ margin: 0 }}>Ballots received</h6>
+        <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: 17 }}>
+            {voted.size}
+            <span className="text-muted"> / {roster.length}</span>
+          </span>
+          <svg
+            className="chev"
+            width="12"
+            height="8"
+            viewBox="0 0 12 8"
+            aria-hidden="true"
+            style={{ color: "var(--color-accent)" }}
+          >
+            <path
+              d="M1 1.75 L6 6.25 L11 1.75"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+      </summary>
+
+      <ul
+        style={{
+          listStyle: "none",
+          margin: 0,
+          padding: "var(--space-2) 0 0",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(132px, 1fr))",
+          columnGap: "var(--space-4)",
+        }}
+      >
+        {people.map((person) => {
+          const done = voted.has(person.id);
+          return (
+            <li
+              key={person.id}
+              aria-label={`${person.name} — ${done ? "ballot received" : "not yet"}`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 9,
+                padding: "6px 0",
+                borderBottom: "1px solid var(--color-divider)",
+                color: done
+                  ? "var(--color-text)"
+                  : "color-mix(in srgb, var(--color-text) 34%, transparent)",
+                fontWeight: done ? 600 : 400,
+                transition: "color 600ms ease",
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  width: 8,
+                  height: 8,
+                  flex: "none",
+                  background: done ? "var(--color-accent)" : "transparent",
+                  border: done
+                    ? "1px solid var(--color-accent)"
+                    : "1px solid color-mix(in srgb, var(--color-text) 28%, transparent)",
+                  transition: "background 600ms ease, border-color 600ms ease",
+                }}
+              />
+              <span style={{ fontSize: 15 }}>{person.name}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </details>
+  );
+}
+
 /* ── submitted ───────────────────────────────────────────────────────── */
 
 function Submitted({
@@ -303,10 +404,14 @@ function Submitted({
     <>
       <Masthead sub="Votes received" />
       <div style={{ textAlign: "center", marginBottom: "var(--space-4)" }}>
-        <h2>Thanks — you&rsquo;re in.</h2>
-        <p className="text-muted">
-          {state.votedCount} of {state.totalVoters} have voted.
-        </p>
+        <h2 style={{ marginBottom: 0 }}>Thanks — you&rsquo;re in.</h2>
+        {/* The roll below carries the count when the server sends identities;
+            without it, fall back to the bare tally. */}
+        {!state.votedIds && (
+          <p className="text-muted" style={{ marginTop: "var(--space-2)" }}>
+            {state.votedCount} of {state.totalVoters} have voted.
+          </p>
+        )}
       </div>
 
       {CATEGORIES.map((cat) => (
@@ -338,6 +443,10 @@ function Submitted({
           </div>
         </div>
       ))}
+
+      {state.votedIds && (
+        <BallotRoll roster={state.roster} votedIds={state.votedIds} />
+      )}
 
       <hr className="hr" />
       <button className="btn btn-secondary btn-block" onClick={onEdit}>

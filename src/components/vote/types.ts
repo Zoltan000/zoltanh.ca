@@ -79,6 +79,12 @@ export interface VoteState {
   ballot: Ballot | null;
   votedCount: number;
   totalVoters: number;
+  /**
+   * Roster ids that have submitted a ballot — who, not what. Drives the
+   * "ballots received" roll. Optional: if the server omits it the UI falls
+   * back to the bare count, so an older API stays compatible.
+   */
+  votedIds?: string[];
   /** Present only when phase === "results". Sorted winner-first. */
   results?: DrinkResult[];
 }
