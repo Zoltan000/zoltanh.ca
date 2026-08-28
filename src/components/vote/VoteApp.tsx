@@ -11,7 +11,7 @@ import {
   type RosterEntry,
   type VoteState,
 } from "./types";
-import { getState, submitVote, MOCK } from "./api";
+import { getState, submitVote, MOCK, REPLAY } from "./api";
 
 const LS_VOTER = "vote.voterId";
 const LS_REVEAL = "vote.revealSeen";
@@ -742,7 +742,12 @@ export default function VoteApp() {
   const [submitting, setSubmitting] = useState(false);
   const [fatal, setFatal] = useState<string | null>(null);
   const [voteError, setVoteError] = useState<string | null>(null);
-  const [revealSeen, setRevealSeen] = useState(() => ls(LS_REVEAL) === "1");
+  // Real phones see the drumroll once — a locked screen mid-reveal shouldn't
+  // replay it. Preview and ?replay always play it, since watching it IS the
+  // point there.
+  const [revealSeen, setRevealSeen] = useState(
+    () => !MOCK && !REPLAY && ls(LS_REVEAL) === "1"
+  );
 
   const refresh = useCallback(async () => {
     try {
@@ -810,7 +815,7 @@ export default function VoteApp() {
   }
 
   function finishReveal() {
-    lsSet(LS_REVEAL, "1");
+    if (!MOCK) lsSet(LS_REVEAL, "1");
     setRevealSeen(true);
   }
 

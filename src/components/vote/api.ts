@@ -30,6 +30,9 @@ export const API_BASE: string =
 
 export const MOCK: string | null = qs("mock");
 
+/** ?replay forces the winner reveal to play again on a phone that has seen it. */
+export const REPLAY: boolean = qs("replay") !== null;
+
 const TIMEOUT_MS = 8000;
 
 export class ApiError extends Error {
