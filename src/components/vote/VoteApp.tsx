@@ -765,6 +765,19 @@ export default function VoteApp() {
     return () => clearInterval(id);
   }, [refresh]);
 
+  // Re-arm the reveal whenever the party is not in the results phase.
+  //
+  // "Seen" has to mean "seen THIS reveal", not "seen a reveal, ever". The flag
+  // lives in each phone's localStorage, so resetting the server can't clear it
+  // — without this, anyone who watched one reveal would silently skip every
+  // later one, including after an admin reopens voting and closes it again.
+  useEffect(() => {
+    if (state && state.phase !== "results" && revealSeen) {
+      lsSet(LS_REVEAL, "");
+      setRevealSeen(false);
+    }
+  }, [state, revealSeen]);
+
   // Seed the local draft from the server's saved ballot exactly once, so
   // polling never clobbers picks in progress.
   useEffect(() => {
