@@ -33,6 +33,9 @@ export const MOCK: string | null = qs("mock");
 /** ?replay forces the winner reveal to play again on a phone that has seen it. */
 export const REPLAY: boolean = qs("replay") !== null;
 
+/** ?rick fires the rickroll a couple of seconds after load, for previewing. */
+export const RICK_PREVIEW: boolean = qs("rick") !== null;
+
 const TIMEOUT_MS = 8000;
 
 export class ApiError extends Error {
@@ -131,6 +134,7 @@ const mock = {
     ? MOCK
     : "voting") as Phase,
   ballots: {} as Record<string, Ballot>,
+  rickrollAt: null as number | null,
 };
 
 if (MOCK) {
@@ -180,6 +184,7 @@ function mockState(voterId: string | null): VoteState {
     votedCount: Object.keys(mock.ballots).length,
     totalVoters: ROSTER.length,
     votedIds: Object.keys(mock.ballots),
+    rickrollAt: mock.rickrollAt,
   };
   if (mock.phase === "results") state.results = computeResults(DRINKS, mock.ballots);
   return state;
@@ -241,6 +246,18 @@ export async function setPhase(key: string, phase: Phase): Promise<{ phase: Phas
     method: "POST",
     headers: adminHeaders(key),
     body: JSON.stringify({ phase }),
+  });
+}
+
+export async function rickroll(key: string): Promise<{ rickrollAt: number }> {
+  if (MOCK) {
+    await new Promise((r) => setTimeout(r, 120));
+    mock.rickrollAt = Date.now();
+    return { rickrollAt: mock.rickrollAt };
+  }
+  return call<{ rickrollAt: number }>("/admin/rickroll", {
+    method: "POST",
+    headers: adminHeaders(key),
   });
 }
 

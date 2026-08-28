@@ -85,6 +85,13 @@ export interface VoteState {
    * back to the bare count, so an older API stays compatible.
    */
   votedIds?: string[];
+  /**
+   * Epoch ms of the last admin rickroll, or null. Phones fire when this value
+   * CHANGES from the one they first saw — never on the value itself — so a
+   * phone joining late silently adopts the current value instead of being
+   * ambushed, and no clock-skew comparison is involved.
+   */
+  rickrollAt?: number | null;
   /** Present only when phase === "results". Sorted winner-first. */
   results?: DrinkResult[];
 }

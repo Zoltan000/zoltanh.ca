@@ -11,7 +11,8 @@ import {
   type RosterEntry,
   type VoteState,
 } from "./types";
-import { getState, submitVote, MOCK, REPLAY } from "./api";
+import { getState, submitVote, MOCK, REPLAY, RICK_PREVIEW } from "./api";
+import Rickroll, { RICK_SRC, armOnFirstGesture, armRickroll } from "./Rickroll";
 
 const LS_VOTER = "vote.voterId";
 const LS_REVEAL = "vote.revealSeen";
@@ -748,6 +749,11 @@ export default function VoteApp() {
   const [revealSeen, setRevealSeen] = useState(
     () => !MOCK && !REPLAY && ls(LS_REVEAL) === "1"
   );
+  const [ricking, setRicking] = useState(false);
+  const rickVideo = useRef<HTMLVideoElement>(null);
+  // undefined = have not seen a state yet; adopt the first value silently so a
+  // phone joining after a rickroll is not ambushed by the stale timestamp.
+  const rickSeen = useRef<number | null | undefined>(undefined);
 
   const refresh = useCallback(async () => {
     try {
@@ -778,6 +784,30 @@ export default function VoteApp() {
     }
   }, [state, revealSeen]);
 
+  // Fire on CHANGE, never on value — see rickSeen above.
+  useEffect(() => {
+    if (!state) return;
+    const at = state.rickrollAt ?? null;
+    if (rickSeen.current === undefined) {
+      rickSeen.current = at;
+      return;
+    }
+    if (at !== rickSeen.current) {
+      rickSeen.current = at;
+      if (at) setRicking(true);
+    }
+  }, [state]);
+
+  // Arm audio on the first gesture of any kind, not just sign-in.
+  useEffect(() => armOnFirstGesture(() => rickVideo.current), []);
+
+  // ?rick — preview the takeover without a server
+  useEffect(() => {
+    if (!RICK_PREVIEW) return;
+    const t = setTimeout(() => setRicking(true), 2000);
+    return () => clearTimeout(t);
+  }, []);
+
   // Seed the local draft from the server's saved ballot exactly once, so
   // polling never clobbers picks in progress.
   useEffect(() => {
@@ -798,6 +828,8 @@ export default function VoteApp() {
   }, [state, voterId]);
 
   function pickVoter(id: string) {
+    // Real tap: the one chance to arm iOS audio for a later, poll-driven play.
+    armRickroll(rickVideo.current);
     lsSet(LS_VOTER, id);
     setVoterId(id);
     setSeeded(false);
@@ -834,6 +866,53 @@ export default function VoteApp() {
 
   /* — render — */
 
+  // Hiding the overlay is not stopping it — the <video> lives outside the
+  // overlay and would keep playing audio invisibly. Always pause here.
+  function stopRick() {
+    const v = rickVideo.current;
+    if (v) {
+      v.pause();
+      v.currentTime = 0;
+    }
+    setRicking(false);
+  }
+
+  // Mounted on EVERY return path and never unmounted: the element must keep
+  // the iOS activation it earned at sign-in, so it only changes size.
+  const rickLayer = (
+    <>
+      <video
+        ref={rickVideo}
+        src={RICK_SRC}
+        playsInline
+        preload="auto"
+        onEnded={stopRick}
+        style={
+          ricking
+            ? {
+                position: "fixed",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                background: "#000",
+                zIndex: 99,
+              }
+            : {
+                position: "fixed",
+                right: 0,
+                bottom: 0,
+                width: 1,
+                height: 1,
+                opacity: 0,
+                pointerEvents: "none",
+              }
+        }
+      />
+      <Rickroll videoRef={rickVideo} active={ricking} onDismiss={stopRick} />
+    </>
+  );
+
   if (!state) {
     return (
       <div className="sheet">
@@ -846,6 +925,7 @@ export default function VoteApp() {
             Try again
           </button>
         )}
+        {rickLayer}
       </div>
     );
   }
@@ -858,7 +938,12 @@ export default function VoteApp() {
   if (state.phase === "results") {
     const results = state.results ?? [];
     if (!revealSeen && results.length) {
-      return <Reveal winner={results[0]} onDone={finishReveal} />;
+      return (
+        <>
+          <Reveal winner={results[0]} onDone={finishReveal} />
+          {rickLayer}
+        </>
+      );
     }
     body = <Results results={results} />;
   } else if (state.phase === "lobby") {
@@ -892,6 +977,7 @@ export default function VoteApp() {
 
   return (
     <div className="sheet">
+      {rickLayer}
       {body}
       <footer style={{ marginTop: "var(--space-8)", textAlign: "center" }}>
         {fatal && (

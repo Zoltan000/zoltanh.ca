@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { CATEGORIES, type AdminStatus, type Phase } from "./types";
-import { adminStatus, deleteVoter, setPhase, MOCK } from "./api";
+import { adminStatus, deleteVoter, rickroll, setPhase, MOCK } from "./api";
 
 const LS_KEY = "vote.adminKey";
 const POLL_MS = 4000;
@@ -33,6 +33,7 @@ export default function AdminApp() {
   const [error, setError] = useState<string | null>(null);
   const [peek, setPeek] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [rickFired, setRickFired] = useState(false);
 
   const refresh = useCallback(async () => {
     if (!key) return;
@@ -64,6 +65,21 @@ export default function AdminApp() {
     try {
       await setPhase(key, next);
       await refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function fireRickroll() {
+    if (!key || busy) return;
+    if (!window.confirm("Take over all 19 phones right now?")) return;
+    setBusy(true);
+    try {
+      await rickroll(key);
+      setRickFired(true);
+      setTimeout(() => setRickFired(false), 6000);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed.");
     } finally {
@@ -298,6 +314,26 @@ export default function AdminApp() {
           ))}
         </div>
       </details>
+
+      {/* Deliberately unremarkable and last on the page — it should read as a
+          stray debug control, not as a feature. */}
+      <div style={{ textAlign: "center", marginTop: "var(--space-8)", opacity: 0.5 }}>
+        <button
+          className="btn btn-ghost"
+          disabled={busy}
+          onClick={fireRickroll}
+          style={{
+            fontSize: 12,
+            minHeight: 32,
+            fontWeight: 400,
+            color: rickFired ? "var(--color-accent-2-700)" : "var(--color-neutral-700)",
+            textDecoration: "underline",
+            textUnderlineOffset: 3,
+          }}
+        >
+          {rickFired ? "sent" : "the funny button"}
+        </button>
+      </div>
 
       {error && (
         <p className="text-tiny" style={{ color: "var(--color-accent-2-700)", marginTop: "var(--space-3)" }}>
