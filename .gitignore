@@ -21,3 +21,5 @@ pnpm-debug.log*
 .DS_Store
 
 .VSCodeCounter
+# vote party secrets (public repo — never commit)
+vote-secrets.local

@@ -13,7 +13,14 @@ export default defineConfig({
     rehypePlugins: [rehypeAccessibleEmojis]
   },
   site: 'https://astro-portfolio-template.pages.dev',
-  integrations: [tailwind(), react(), robotsTxt(), sitemap()],
+  integrations: [
+    tailwind(),
+    react(),
+    robotsTxt(),
+    // /vote and /vote/admin are unlisted party pages — keep them out of the
+    // sitemap (they also carry noindex in VoteLayout.astro).
+    sitemap({ filter: (page) => !page.includes("/vote") }),
+  ],
   output: "server",
   adapter: cloudflare()
 });

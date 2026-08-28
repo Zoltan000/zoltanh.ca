@@ -1,0 +1,10 @@
+---
+import VoteLayout from "../../layouts/VoteLayout.astro";
+import AdminApp from "../../components/vote/AdminApp";
+
+export const prerender = true;
+---
+
+<VoteLayout title="Mixology Night — Admin">
+  <AdminApp client:only="react" />
+</VoteLayout>

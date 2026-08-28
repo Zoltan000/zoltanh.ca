@@ -1,0 +1,12 @@
+---
+import VoteLayout from "../layouts/VoteLayout.astro";
+import VoteApp from "../components/vote/VoteApp";
+
+// Static asset: all state comes from api.zoltanh.ca at runtime, so there is
+// nothing to render server-side and the page survives a Worker hiccup.
+export const prerender = true;
+---
+
+<VoteLayout title="Mixology Night — Vote">
+  <VoteApp client:only="react" />
+</VoteLayout>
