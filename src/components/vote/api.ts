@@ -11,7 +11,9 @@ import {
   type Ballot,
   type CategoryId,
   type DrinkResult,
+  type Ingredient,
   type Phase,
+  type RecipeBook,
   type VoteState,
 } from "./types";
 import { DRINKS, ROSTER } from "./seed";
@@ -81,8 +83,10 @@ async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
 
 export function computeResults(
   drinks: typeof DRINKS,
-  ballots: Record<string, Ballot>
+  ballots: Record<string, Ballot>,
+  bonuses: string[] = []
 ): DrinkResult[] {
+  const bonusSet = new Set(bonuses);
   const counts = new Map<string, Record<CategoryId, number>>();
   for (const d of drinks) counts.set(d.id, { name: 0, taste: 0, presentation: 0 });
 
@@ -95,12 +99,14 @@ export function computeResults(
 
   const rows = drinks.map((d) => {
     const c = counts.get(d.id)!;
+    const bonus = bonusSet.has(d.id) ? 1 : 0;
     return {
       drinkId: d.id,
       name: d.name,
       team: d.team,
       counts: c,
-      total: c.name + c.taste + c.presentation,
+      bonus,
+      total: c.name + c.taste + c.presentation + bonus,
       rank: 0,
     };
   });
@@ -135,7 +141,17 @@ const mock = {
     : "voting") as Phase,
   ballots: {} as Record<string, Ballot>,
   rickrollAt: null as number | null,
+  bonuses: [] as string[],
+  recipes: {} as Record<string, { ingredients: Ingredient[]; notes: string; updatedAt: number }>,
 };
+
+/** Mirrors the server's list — kept here so ?mock= previews get a real dropdown. */
+export const UNITS: string[] = [
+  "oz", "ml", "cl", "tsp", "tbsp", "cup",
+  "dash", "splash", "barspoon", "drop", "pinch", "part",
+  "piece", "slice", "wedge", "leaf", "sprig",
+  "to taste", "top up",
+];
 
 if (MOCK) {
   // Pre-fill votes from everyone except the first three, so the results screen
@@ -173,6 +189,43 @@ if (MOCK) {
     };
   });
   if (mock.phase === "lobby") mock.ballots = {};
+
+  // Two recipes filled in and the rest blank, so the browse UI previews both
+  // the populated and the "not submitted yet" row.
+  mock.recipes["portal-fluid"] = {
+    ingredients: [
+      { name: "Blue curaçao", amount: "1", unit: "oz" },
+      { name: "White rum", amount: "1.5", unit: "oz" },
+      { name: "Lime juice", amount: "0.5", unit: "oz" },
+      { name: "Soda", amount: "", unit: "top up" },
+    ],
+    notes: "Build over ice, stir once, garnish with a lime wheel.",
+    updatedAt: Date.now(),
+  };
+  mock.recipes["le-tournevis"] = {
+    ingredients: [
+      { name: "Vodka", amount: "2", unit: "oz" },
+      { name: "Orange juice", amount: "4", unit: "oz" },
+    ],
+    notes: "",
+    updatedAt: Date.now(),
+  };
+}
+
+function mockRecipeBook(): RecipeBook {
+  return {
+    units: UNITS,
+    recipes: DRINKS.map((d) => {
+      const r = mock.recipes[d.id];
+      return {
+        drinkId: d.id,
+        name: d.name,
+        ingredients: r ? r.ingredients : [],
+        notes: r ? r.notes : "",
+        updatedAt: r ? r.updatedAt : null,
+      };
+    }),
+  };
 }
 
 function mockState(voterId: string | null): VoteState {
@@ -186,7 +239,8 @@ function mockState(voterId: string | null): VoteState {
     votedIds: Object.keys(mock.ballots),
     rickrollAt: mock.rickrollAt,
   };
-  if (mock.phase === "results") state.results = computeResults(DRINKS, mock.ballots);
+  if (mock.phase === "results")
+    state.results = computeResults(DRINKS, mock.ballots, mock.bonuses);
   return state;
 }
 
@@ -227,8 +281,10 @@ export async function adminStatus(key: string, peek = false): Promise<AdminStatu
       phase: mock.phase,
       voted: ROSTER.filter((r) => votedIds.has(r.id)).map((r) => ({ id: r.id, name: r.name })),
       notVoted: ROSTER.filter((r) => !votedIds.has(r.id)).map((r) => ({ id: r.id, name: r.name })),
+      drinks: DRINKS,
+      bonuses: mock.bonuses,
     };
-    if (peek) status.results = computeResults(DRINKS, mock.ballots);
+    if (peek) status.results = computeResults(DRINKS, mock.ballots, mock.bonuses);
     return status;
   }
   return call<AdminStatus>(`/admin/status${peek ? "?peek=1" : ""}`, {
@@ -246,6 +302,32 @@ export async function setPhase(key: string, phase: Phase): Promise<{ phase: Phas
     method: "POST",
     headers: adminHeaders(key),
     body: JSON.stringify({ phase }),
+  });
+}
+
+/**
+ * Award or revoke a drink's single bonus point.
+ *
+ * Explicit `on`, never a flip: the panel polls every 4s and re-rendering
+ * mid-tap could otherwise send a second request that silently undid the first.
+ */
+export async function setBonus(
+  key: string,
+  drinkId: string,
+  on: boolean
+): Promise<{ bonuses: string[] }> {
+  if (MOCK) {
+    await new Promise((r) => setTimeout(r, 120));
+    const set = new Set(mock.bonuses);
+    if (on) set.add(drinkId);
+    else set.delete(drinkId);
+    mock.bonuses = DRINKS.filter((d) => set.has(d.id)).map((d) => d.id);
+    return { bonuses: mock.bonuses };
+  }
+  return call<{ bonuses: string[] }>("/admin/bonus", {
+    method: "POST",
+    headers: adminHeaders(key),
+    body: JSON.stringify({ drinkId, on }),
   });
 }
 
@@ -271,6 +353,41 @@ export async function deleteVoter(key: string, voterId: string): Promise<{ ok: t
     method: "DELETE",
     headers: adminHeaders(key),
     body: JSON.stringify({ voterId }),
+  });
+}
+
+/* ── recipes ─────────────────────────────────────────────────────────────
+   Public reads, roster-identified writes. Deliberately independent of phase:
+   teams write these down while they're mixing, long before voting opens. */
+
+export async function getRecipes(): Promise<RecipeBook> {
+  if (MOCK) {
+    await new Promise((r) => setTimeout(r, 120));
+    return mockRecipeBook();
+  }
+  return call<RecipeBook>("/recipes");
+}
+
+export async function submitRecipe(
+  voterId: string,
+  ingredients: Ingredient[],
+  notes: string
+): Promise<RecipeBook> {
+  if (MOCK) {
+    await new Promise((r) => setTimeout(r, 200));
+    const person = ROSTER.find((p) => p.id === voterId);
+    if (person?.drinkId) {
+      mock.recipes[person.drinkId] = {
+        ingredients: ingredients.filter((i) => i.name.trim()),
+        notes,
+        updatedAt: Date.now(),
+      };
+    }
+    return mockRecipeBook();
+  }
+  return call<RecipeBook>("/recipe", {
+    method: "POST",
+    body: JSON.stringify({ voterId, ingredients, notes }),
   });
 }
 

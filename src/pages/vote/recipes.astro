@@ -1,0 +1,12 @@
+---
+import VoteLayout from "../../layouts/VoteLayout.astro";
+import RecipeApp from "../../components/vote/RecipeApp";
+
+// Static like the other party pages: everything comes from api.zoltanh.ca at
+// runtime, so there is nothing to render server-side.
+export const prerender = true;
+---
+
+<VoteLayout title="Mixology Night — Recipes">
+  <RecipeApp client:only="react" />
+</VoteLayout>

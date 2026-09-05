@@ -612,6 +612,22 @@ function Results({ results }: { results: DrinkResult[] }) {
           </span>
           <span style={{ fontFamily: "var(--font-heading)", fontSize: 26, fontWeight: 600 }}>
             {drink.total} pts
+            {/* The radar only ever plots votes, so an unexplained bonus would
+                read as the chart disagreeing with the score. */}
+            {(drink.bonus ?? 0) > 0 && (
+              <span
+                className="text-tiny"
+                style={{
+                  display: "block",
+                  textAlign: "right",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 400,
+                  color: "var(--color-accent-2-700)",
+                }}
+              >
+                includes +{drink.bonus} bonus
+              </span>
+            )}
           </span>
         </div>
 
@@ -722,7 +738,15 @@ function Results({ results }: { results: DrinkResult[] }) {
               }}
             >
               <span style={{ width: 28, textAlign: "right" }}>#{r.rank}</span>
-              <span style={{ flex: 1, textAlign: "left" }}>{r.name}</span>
+              <span style={{ flex: 1, textAlign: "left" }}>
+                {r.name}
+                {(r.bonus ?? 0) > 0 && (
+                  <span className="text-tiny" style={{ color: "var(--color-accent-2-700)" }}>
+                    {" "}
+                    +{r.bonus}
+                  </span>
+                )}
+              </span>
               <span>{r.total}</span>
             </button>
           ))}

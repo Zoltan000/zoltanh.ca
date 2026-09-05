@@ -66,6 +66,11 @@ export interface DrinkResult {
   name: string;
   team: string[];
   counts: Record<CategoryId, number>;
+  /**
+   * Admin-awarded bonus, 0 or 1. Counted in `total`, absent from `counts`.
+   * Optional so an older backend simply reads as no bonus anywhere.
+   */
+  bonus?: number;
   total: number;
   /** 1-based. Ties share a rank. */
   rank: number;
@@ -100,8 +105,38 @@ export interface AdminStatus {
   phase: Phase;
   voted: { id: string; name: string }[];
   notVoted: { id: string; name: string }[];
+  /** Every drink, so the panel can offer a bonus row per team in any phase. */
+  drinks?: Drink[];
+  /** Drink ids currently holding a bonus point, in drinks order. */
+  bonuses?: string[];
   /** Only fetched when the admin explicitly peeks. */
   results?: DrinkResult[];
+}
+
+/* ── recipes ─────────────────────────────────────────────────────────── */
+
+export interface Ingredient {
+  name: string;
+  /** Free text, so "1 1/2" and "2-3" survive. Empty is allowed. */
+  amount: string;
+  /** One of the server's units, or "" for an unmeasured ingredient. */
+  unit: string;
+}
+
+export interface RecipeEntry {
+  drinkId: string;
+  name: string;
+  ingredients: Ingredient[];
+  notes: string;
+  /** null until a team has submitted anything. */
+  updatedAt: number | null;
+}
+
+export interface RecipeBook {
+  /** Units offered in the dropdown — the server is the authority. */
+  units: string[];
+  /** Every drink, in menu order, whether or not it has a recipe yet. */
+  recipes: RecipeEntry[];
 }
 
 export const EMPTY_BALLOT: Ballot = { name: null, taste: null, presentation: null };

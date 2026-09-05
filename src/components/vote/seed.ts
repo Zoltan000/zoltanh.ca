@@ -42,5 +42,4 @@ export const ROSTER: RosterEntry[] = [
   { id: "julian", name: "Julian T.", drinkId: "alligator-uti" },
   { id: "grace", name: "Grace", drinkId: "alligator-uti" },
   { id: "wasif", name: "Wasif", drinkId: null },
-  { id: "justin", name: "Justin", drinkId: null },
 ];

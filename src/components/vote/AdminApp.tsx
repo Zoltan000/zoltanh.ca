@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { CATEGORIES, type AdminStatus, type Phase } from "./types";
-import { adminStatus, deleteVoter, rickroll, setPhase, MOCK } from "./api";
+import { adminStatus, deleteVoter, rickroll, setBonus, setPhase, MOCK } from "./api";
 
 const LS_KEY = "vote.adminKey";
 const POLL_MS = 4000;
@@ -87,6 +87,19 @@ export default function AdminApp() {
     }
   }
 
+  async function toggleBonus(drinkId: string, on: boolean) {
+    if (!key || busy) return;
+    setBusy(true);
+    try {
+      await setBonus(key, drinkId, on);
+      await refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function remove(voterId: string, name: string) {
     if (!key) return;
     if (!window.confirm(`Delete ${name}'s votes? They can vote again.`)) return;
@@ -154,6 +167,8 @@ export default function AdminApp() {
   }
 
   const total = status.voted.length + status.notVoted.length;
+  const drinks = status.drinks ?? [];
+  const bonusSet = new Set(status.bonuses ?? []);
 
   return (
     <div className="sheet" style={{ maxWidth: 480 }}>
@@ -272,6 +287,13 @@ export default function AdminApp() {
             >
               <span style={{ flex: 1 }}>
                 #{r.rank} {r.name}
+                {/* Without this the columns visibly fail to sum to Pts. */}
+                {(r.bonus ?? 0) > 0 && (
+                  <span className="text-tiny" style={{ color: "var(--color-accent-2-700)" }}>
+                    {" "}
+                    +{r.bonus} bonus
+                  </span>
+                )}
               </span>
               {CATEGORIES.map((c) => (
                 <span key={c.id} style={{ width: 26, textAlign: "right" }}>
@@ -282,6 +304,54 @@ export default function AdminApp() {
             </div>
           ))}
         </div>
+      )}
+
+      {drinks.length > 0 && (
+        <>
+          <hr className="hr" />
+          <details>
+            <summary style={{ cursor: "pointer", fontSize: 14 }} className="text-muted">
+              Bonus points ({bonusSet.size} awarded)
+            </summary>
+            <p className="text-muted text-tiny" style={{ margin: "var(--space-2) 0" }}>
+              One extra point each. Counts toward the total and can change the
+              ranking — but never touches the category tallies or the radar.
+            </p>
+            <div>
+              {drinks.map((d) => {
+                const on = bonusSet.has(d.id);
+                return (
+                  <div
+                    key={d.id}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "var(--space-2)",
+                      padding: "6px 0",
+                      borderBottom: "1px solid var(--color-divider)",
+                    }}
+                  >
+                    <span style={{ flex: 1, minWidth: 0 }}>
+                      <span style={{ fontSize: 15 }}>{d.name}</span>
+                      <span className="text-muted text-tiny" style={{ display: "block" }}>
+                        {d.team.join(" & ")}
+                      </span>
+                    </span>
+                    <button
+                      className={on ? "btn btn-primary" : "btn btn-ghost"}
+                      disabled={busy}
+                      onClick={() => toggleBonus(d.id, !on)}
+                      aria-pressed={on}
+                      style={{ minHeight: 36, minWidth: 62, fontSize: 13 }}
+                    >
+                      {on ? "+1 ✓" : "+1"}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </details>
+        </>
       )}
 
       <hr className="hr" />
